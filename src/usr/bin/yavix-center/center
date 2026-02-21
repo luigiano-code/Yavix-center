@@ -9,7 +9,7 @@ import sys
 
 
 from updater_page import UpdaterPage
-
+from cleaner_page import CleanerPage
 
 class MainWindow(Gtk.ApplicationWindow):
 	def __init__(self, app):
@@ -33,6 +33,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.set_child(layout)
 
 		self.stack.add_titled(UpdaterPage(), "1", "Updater Page")
+		self.stack.add_titled(CleanerPage(), "2", "Cleaner Page")
 
 class InstallerApp(Adw.Application):
 	def __init__(self):
