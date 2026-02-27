@@ -4,44 +4,35 @@ from gi.repository import Gtk, GLib
 
 class UpdaterPage(Gtk.Box):
 	def __init__(self):
-		super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+		super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+		self.set_margin_top(50)
+		self.set_margin_bottom(50)
+		self.set_margin_start(50)
+		self.set_margin_end(50)
 
 		self.update_btn = Gtk.Button(label="Update")
+		self.update_btn.set_halign(Gtk.Align.CENTER)
 		self.update_btn.connect("clicked", self.on_update_clicked)
+		self.update_btn.set_size_request(200, 50)
 		self.append(self.update_btn)
 
 
 		self.system_update_btn = Gtk.Button(label="Update System")
+		self.system_update_btn.set_halign(Gtk.Align.CENTER)
 		self.system_update_btn.connect("clicked", self.on_system_update_clicked)
+		self.system_update_btn.set_size_request(200, 50)
 		self.append(self.system_update_btn)
 
-		self.log_buffer = Gtk.TextBuffer()
-		text_view = Gtk.TextView(buffer=self.log_buffer)
-		text_view.set_editable(False)
-		text_view.set_wrap_mode(Gtk.WrapMode.WORD)
+		self.back_btn = Gtk.Button(label="Back")
+		self.back_btn.set_halign(Gtk.Align.CENTER)
+		self.back_btn.set_size_request(200, 50)
+		self.append(self.back_btn)
 
-		scrolled = Gtk.ScrolledWindow()
-		scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-		scrolled.set_vexpand(True)
-		scrolled.set_min_content_height(300)
-		scrolled.set_child(text_view)
-
-		self.append(scrolled)
-
-	def append_log(self, text):
-		GLib.idle_add(lambda: self._append(text))
 
 	def on_system_update_clicked(self, button):
 		subprocess.run(["pkexec", "/usr/bin/get_update_files.sh"])	
 		subprocess.run(["sudo", "chmod", "+x", "/usr/bin/update.sh"])	
 		subprocess.run(["pkexec", "/usr/bin/update.sh"])	
-
-	def _append(self, text):
-		end_iter = self.log_buffer.get_end_iter()
-		self.log_buffer.insert(end_iter, text + "\n")
-		mark = self.log_buffer.create_mark("end", self.log_buffer.get_end_iter(), False)
-		text_view = self.get_child_by_name("log_view") 
-		return False
 
 	def on_update_clicked(self, button):
 		self.update_btn.set_sensitive(False)

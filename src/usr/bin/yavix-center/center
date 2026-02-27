@@ -8,6 +8,7 @@ from gi.repository import Gtk, Adw, GLib
 import sys
 
 
+from main_page import MainPage
 from updater_page import UpdaterPage
 from cleaner_page import CleanerPage
 
@@ -18,24 +19,38 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
 		self.stack.set_transition_duration(200)
 
-		self.sidebar = Gtk.StackSidebar(stack=self.stack)
-		self.sidebar.set_vexpand(True)
-		self.sidebar.set_halign(Gtk.Align.START)
-		self.sidebar.set_margin_top(10)
-		self.sidebar.set_margin_bottom(10)
-		self.sidebar.set_margin_start(10)
-		self.sidebar.set_margin_end(10)
+		self.set_default_size(400, 500)
 
-		layout = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-		layout.append(self.sidebar)
-		layout.append(self.stack)
+		self.set_child(self.stack)
 
-		self.set_child(layout)
+		self.main_page = MainPage()	
+		self.updater_page = UpdaterPage()
+		self.cleaner_page = CleanerPage()
 
-		self.stack.add_titled(UpdaterPage(), "1", "Updater Page")
-		self.stack.add_titled(CleanerPage(), "2", "Cleaner Page")
+		self.stack.add_named(self.updater_page, "updater")		
+		self.stack.add_named(self.cleaner_page, "cleaner")	
+		self.stack.add_named(self.main_page, "main_page")
 
-class InstallerApp(Adw.Application):
+		self.main_page.updater_button.connect("clicked", self.show_updater_page)
+		self.updater_page.back_btn.connect("clicked", self.show_main_page)
+
+		self.main_page.cleaner_button.connect("clicked", self.show_cleaner_page)
+		self.cleaner_page.back_btn.connect("clicked", self.show_main_page)
+
+
+		self.stack.set_visible_child_name("main_page")
+		
+	def show_main_page(self, button):
+		self.stack.set_visible_child_name("main_page")
+	
+	def show_updater_page(self, button):
+		self.stack.set_visible_child_name("updater")
+		
+	def show_cleaner_page(self, button):
+		self.stack.set_visible_child_name("cleaner")
+		
+	
+class CenterApp(Adw.Application):
 	def __init__(self):
 		super().__init__(application_id="com.luigiano-code.Yavix-center")
 
@@ -44,5 +59,5 @@ class InstallerApp(Adw.Application):
 		win.present()
 
 if __name__ == "__main__":
-	app = InstallerApp()
+	app = CenterApp()
 	app.run(sys.argv)
