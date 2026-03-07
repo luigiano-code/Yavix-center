@@ -31,6 +31,13 @@ class MainPage(Gtk.Box):
 		self.cleaner_button.connect("clicked", self.on_cleaner_clicked)
 		self.append(self.cleaner_button)
 
+		self.driver_button = Gtk.Button(label="install nvidia drivers")
+		self.driver_button.set_halign(Gtk.Align.CENTER)
+		self.driver_button.set_size_request(200, 50)
+		self.driver_button.connect("clicked", self.on_driver_clicked)
+		self.append(self.driver_button)
+
+
 
 	def on_updater_clicked(self, button):
 		pass
@@ -38,9 +45,6 @@ class MainPage(Gtk.Box):
 	def on_cleaner_clicked(self, button):
 		pass
 
-
-
-	def on_updater_clicked(self, button):
+	def on_driver_clicked(self, buttin):
 		pass
-	def on_updater_clicked(self, button):
-		pass
+
