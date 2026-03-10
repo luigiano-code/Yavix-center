@@ -1,4 +1,5 @@
 import subprocess
+import threading
 from gi.repository import Gtk
 
 
@@ -23,4 +24,10 @@ class CleanerPage(Gtk.Box):
 		self.append(self.back_btn)
 
 	def on_cleaner_clicked(self, button):
+		self.cleaner_btn.set_sensitive(False)
+		threading.Thread(target=self.run_cleaner, daemon=True).start()
+
+	def run_cleaner(self):
 		subprocess.run(["pkexec", "/usr/bin/clear.sh"])
+		self.cleaner_btn.set_sensitive(True)
+
