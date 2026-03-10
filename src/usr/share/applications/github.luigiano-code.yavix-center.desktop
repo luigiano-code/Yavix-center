@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Yavix Center
+
+Exec=python /usr/bin/yavix-center/center.py
+
+Icon=/usr/bin/yavix-center/images/logo.svg
+
+Terminal=false
+Type=Application
+StartupNotify=false
