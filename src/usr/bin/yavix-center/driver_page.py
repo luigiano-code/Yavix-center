@@ -1,4 +1,5 @@
 import subprocess
+import threading
 from gi.repository import Gtk
 
 
@@ -22,7 +23,7 @@ class DriverPage(Gtk.Box):
 		self.append(self.back_btn)
 
 	def open_gpu_detected(self):
-		dialog = Gtk.Dialog(title="Dialog")
+		dialog = Gtk.Dialog(title="Setup")
 		dialog.set_transient_for(self.get_root())
 
 		box = dialog.get_content_area()
@@ -30,10 +31,13 @@ class DriverPage(Gtk.Box):
 		box.append(label)
 
 		dialog.show()
+		subprocess.run(["sudo", "pacman", "-S", "nvidia-dkms", "nvidia-utils", "nvidia-settings", "--noconfirm"])
+		dialog.close()
+
 
 
 	def open_no_gpu_detected(self):
-		dialog = Gtk.Dialog(title="Dialog")
+		dialog = Gtk.Dialog(title="Setup")
 		dialog.set_transient_for(self.get_root())
 
 		dialog.add_button("OK", Gtk.ResponseType.OK)
@@ -44,19 +48,20 @@ class DriverPage(Gtk.Box):
 
 		dialog.connect("response", self.on_response)
 		dialog.show()
-		subprocess.run(["sudo", "pacman", "-S", "nvidia-dkms", "nvidia-utils", "nvidia-settings", "--noconfirm"])
-		dialog.close()
 
 	def on_response(self, dialog, response):
 		dialog.close()
 
-	def on_driver_clicked(self, button):
+	def run_driver_setup(self):
 		output = subprocess.check_output(["lspci"], text=True)
 
-		if not("NVIDIA" in output):
-			self.open_gpu_detected()
+		if "NVIDIA" in output:
+			threading.Thread(target=self.open_gpu_detected, daemon=True).start()
 		else:
 			self.open_no_gpu_detected()
 
+	def on_driver_clicked(self, button):
+		self.driver_btn.set_sensitive(False)
+		threading.Thread(target=self.run_driver_setup, daemon=True).start()
 
 
