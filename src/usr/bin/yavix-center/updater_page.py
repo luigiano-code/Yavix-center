@@ -30,38 +30,28 @@ class UpdaterPage(Gtk.Box):
 
 
 	def on_system_update_clicked(self, button):
-		subprocess.run(["pkexec", "/usr/bin/get_update_files.sh"])	
-		subprocess.run(["sudo", "chmod", "+x", "/usr/bin/update.sh"])	
-		subprocess.run(["pkexec", "/usr/bin/update.sh"])	
+		self.system_update_btn.set_sensitive(False)
+		threading.Thread(target=self.run_system_update, daemon=True).start()
 
 	def on_update_clicked(self, button):
 		self.update_btn.set_sensitive(False)
-		self.append_log("Running: sudo pacman -Syu ...")
 		threading.Thread(target=self.run_update, daemon=True).start()
+
+	def run_system_update(self):
+		subprocess.run(["pkexec", "/usr/bin/get_update_files.sh"])
+		subprocess.run(["pkexec", "chmod", "+x", "/usr/bin/update.sh"])
+		subprocess.run(["pkexec", "/usr/bin/update.sh"])
+
 
 	def run_update(self):
 		try:
 			process = subprocess.Popen(
-				["sudo", "pacman", "-Syu", "--noconfirm"],
-				stdout=subprocess.PIPE,
-				stderr=subprocess.STDOUT,
-				text=True
+				["pkexec", "pacman", "-Syu", "--noconfirm"],
 			)
-
-			for line in iter(process.stdout.readline, ""):
-				self.append_log(line.rstrip())
-
-			process.stdout.close()
+			process = subprocess.Popen(
+				["flatpak", "update"]
+			)
 			process.wait()
-
-			if process.returncode == 0:
-				self.append_log("Update finished successfully!")
-			else:
-				self.append_log(f"Update failed with code {process.returncode}")
-
-		except Exception as e:
-			self.append_log(f"Update failed: {e}")
 
 		finally:
 			GLib.idle_add(self.update_btn.set_sensitive, True)
-
