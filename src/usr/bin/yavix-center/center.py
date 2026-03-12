@@ -21,7 +21,7 @@ class MainWindow(Gtk.ApplicationWindow):
 		self.stack.set_transition_duration(200)
 
 		self.set_default_size(400, 500)
-
+		self.set_title("Yavix Center")
 		self.set_child(self.stack)
 
 		self.main_page = MainPage()	

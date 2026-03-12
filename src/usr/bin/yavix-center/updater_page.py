@@ -45,10 +45,10 @@ class UpdaterPage(Gtk.Box):
 
 	def run_update(self):
 		try:
-			process = subprocess.Popen(
+			process = subprocess.run(
 				["pkexec", "pacman", "-Syu", "--noconfirm"],
 			)
-			process = subprocess.Popen(
+			process = subprocess.run(
 				["flatpak", "update"]
 			)
 			process.wait()
