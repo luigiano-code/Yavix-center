@@ -1,5 +1,5 @@
 pkgname=yavix-center
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 pkgdesc="Yavix center"
 arch=('x86_64')
