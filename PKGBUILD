@@ -1,6 +1,6 @@
 pkgname=yavix-center
-pkgver=1.1
-pkgrel=1
+pkgver=1.2
+pkgrel=2
 pkgdesc="Yavix center"
 arch=('x86_64')
 license=('GPL-3.0')
