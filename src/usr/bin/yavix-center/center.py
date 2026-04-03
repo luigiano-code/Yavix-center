@@ -13,6 +13,7 @@ from updater_page import UpdaterPage
 from cleaner_page import CleanerPage
 from driver_page import DriverPage
 from productivity_page import ProductivityPage
+from theme_page import ThemePage
 
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, app):
@@ -30,11 +31,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.cleaner_page = CleanerPage()
         self.driver_page = DriverPage()
         self.productivity_page = ProductivityPage()
+        self.theme_page = ThemePage()
 
         self.stack.add_named(self.updater_page, "updater")      
         self.stack.add_named(self.cleaner_page, "cleaner")  
         self.stack.add_named(self.driver_page, "driver")
-        self.stack.add_named(self.productivity_page, "productivity_mode")
+        self.stack.add_named(self.productivity_page, "productivity_page")
+        self.stack.add_named(self.theme_page, "theme_page")
         self.stack.add_named(self.main_page, "main_page")
 
         self.main_page.updater_button.connect("clicked", self.show_updater_page)
@@ -46,8 +49,11 @@ class MainWindow(Gtk.ApplicationWindow):
         self.main_page.driver_button.connect("clicked", self.show_driver_page)
         self.driver_page.back_btn.connect("clicked", self.show_main_page)
     
-        self.main_page.productivity_button.connect("clicked", self.show_productivi_page)
+        self.main_page.productivity_button.connect("clicked", self.show_productivity_page)
         self.productivity_page.back_btn.connect("clicked", self.show_main_page)
+
+        self.main_page.theme_button.connect("clicked", self.show_theme_page)
+        self.theme_page.back_btn.connect("clicked", self.show_main_page)
 
         self.stack.set_visible_child_name("main_page")
         
@@ -63,8 +69,12 @@ class MainWindow(Gtk.ApplicationWindow):
     def show_driver_page(self, button):
         self.stack.set_visible_child_name("driver")
         
-    def show_productivi_page(self, button):
+    def show_productivity_page(self, button):
         self.stack.set_visible_child_name("productivity_mode")
+
+    def show_theme_page(self, button):
+        self.stack.set_visible_child_name("theme_page")
+
 
 class CenterApp(Adw.Application):
     def __init__(self):
