@@ -64,6 +64,40 @@ class UpdaterPage(Gtk.Box):
 
     def run_update(self):
         try:
+            GLib.idle_add(self.update_btn.set_label, "Updating - Do not close the app!")
+
+            result = subprocess.run(
+                ["pkexec", "pacman", "-Syu", "--noconfirm"],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+
+            result = subprocess.run(
+                ["flatpak", "update", "-y"],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+
+            GLib.idle_add(self.update_btn.set_label, "Updated")
+
+        except subprocess.CalledProcessError as e:
+            error_msg = e.stderr.strip()
+
+            short_error = error_msg.split("\n")[-1][:100]
+
+            GLib.idle_add(
+                self.update_btn.set_label,
+                f"Error: {short_error}"
+            )
+
+        finally:
+            GLib.idle_add(self.update_btn.set_sensitive, True)
+
+"""
+    def run_update(self):
+        try:
             self.update_btn.set_label("Updating - Do not close the app!")
             process = subprocess.run(
                 ["pkexec", "pacman", "-Syu", "--noconfirm"],
@@ -74,3 +108,4 @@ class UpdaterPage(Gtk.Box):
         finally:
             self.update_btn.set_label("Updated")
             GLib.idle_add(self.update_btn.set_sensitive, True)
+"""
