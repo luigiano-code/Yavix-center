@@ -37,12 +37,12 @@ class MainPage(Gtk.Box):
 		self.productivity_button = Gtk.Button(label="Productivity mode")
 		self.productivity_button.set_halign(Gtk.Align.CENTER)
 		self.productivity_button.set_size_request(200, 50)
-		self.append(self.productivity_button)
+#		self.append(self.productivity_button)
 
 		self.theme_button = Gtk.Button(label="Change theme")
 		self.theme_button.set_halign(Gtk.Align.CENTER)
 		self.theme_button.set_size_request(200, 50)
-		self.append(self.theme_button)
+#		self.append(self.theme_button)
 
 
 
